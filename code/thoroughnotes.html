@@ -211,6 +211,140 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="http://nbviewer.jupyter.org/github/barbagroup/AeroPython/blob/master/lessons/01_Lesson01_sourceSink.ipynb">http://nbviewer.jupyter.org/github/barbagroup/AeroPython/blob/master/lessons/01_Lesson01_sourceSink.ipynb</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#from IPython.core.display import HTML</span>
+<span class="c1">#def css_styling():</span>
+<span class="c1">#    styles = open(&#39;../styles/custom.css&#39;, &#39;r&#39;).read()</span>
+<span class="c1">#    return HTML(styles)</span>
+<span class="c1">#css_styling()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This book takes a comuational approach, which has several advantages over mathematical approaches:</p>
+<ul>
+<li>I present most ideas using Python code, rather than mathematical notation. In general, Python code is more readable; also, because it is executable, readers can download it, run it, and modify it.</li>
+<li>Each chapter includes exercises readers can do to develop and solidify their learning. When you write programs, you express your understanding in code; while you are debugging the program, you are also correcting your understanding.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Some exercises involve experiments to test statistical behavior. For example, you can explore the Central Limit Theorem (CLT) by generating random samples and computing their sums. The resulting visiualizations demonstrate why the CLT works and and when it doesn't.</li>
+<li>Some ideas that are hard to grasp mathematically are easy to understand by simulation. For example, we approximate p-values by running random simulations, which reinforces the meaning of the p-value.</li>
+<li>Because the book is based on a general-purpose programming language (Python), readers can import data from almost any source. They are not limited to datasets that have been cleaned and formatted for a partciular statistics tool.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The book lends itself to a project-based approach. In my class, students work on a semester-long project that requires them to pose a statistical question, find a dataset that can address it, and apply each of the techniques they learn to their own data.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To demonstrate my approach to statistical analysis, the book presents a case study that runs through all of the chapters. It uses data from two sources:</p>
+<ul>
+<li>The Natoinal Survey of Family Growth (NSFG), conducted by the U.S. Centers for Disease Control and Prevention (CDC) to gather "information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men's and women's health." (See <a href="http://cdc/gov/nchs/nsfg.html">http://cdc/gov/nchs/nsfg.html</a>)</li>
+<li>The Behavioral Risk Factor Surveillance System (BRFSS), conducted by the National Center for Chronic Disease and Prevention and Health Promotion to "track conditions and risk behaviors in the United States." (See <a href="http://cdc.gov/BRFSS/">http://cdc.gov/BRFSS/</a>)</li>
+</ul>
+<p>Other examples use data from the IRS, the U.S. Census, and the Boston Marathon.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This second edition of <em>Think Stats</em> includes the chapters from the first edition, many of them substantially revised, and new chapters on regression, time series analysis, survival analysis, and analytic methods. The previous edition did not use pandas, SciPy, or StatsModels, so all of that material is new.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#from IPython.core.display import HTML</span>
+<span class="c1">#def css_styling():</span>
+<span class="c1">#    styles = open(&#39;theme/serif.css&#39;, &#39;r&#39;).read()</span>
+<span class="c1">#    return HTML(styles)</span>
+<span class="c1">#css_styling()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="-0.1-How-I-wrote-this-book"><font color="teal"> 0.1 How I wrote this book</font><a class="anchor-link" href="#-0.1-How-I-wrote-this-book">&#182;</a></h2><p>When people write a new textbook, they usually start by reading a stack of old textbooks. As a result, most books contain the same material in pretty much the same order.</p>
+<p>I did not do that. In fact, I used almost no printed material while I was writing this book, for several reasons:</p>
+<ul>
+<li>My goal was to explore a new approach to this material, so I didn't want much exposure to existing approaches.</li>
+<li>Since I am making this book available under a free license, I wanted to make sure that no part of it was encumbered by copyright restrictions.</li>
+<li>Many readers of my books don't ahve access to libraries of printed material, so I triedto make references to resources that are freely available on the internet.</li>
+<li>Some proponents of old media think that the exclusive use of electronic resources is lazy and unreliable. They might be right about the first part, but I think they are wrong about the second, so I wanted to test my theory.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The resource I used more than any other is Wikipedia. In general, the articles I read on statistical topics were very good (although I made a few small changes along the way). I  include references to Wikipedia pages throughout the book and I encourage you to follow those links; in many cases, the Wikipedia page picks up where my description leaves off. The vocabulary and notation in this book are generally consistent with Wikipedia, unless I had a good reason to deviate. Other resources I found useful were Wolfram MathWorld and the Reddit statistics forum, <a href="http://www.reddit.com/r/statistics">http://www.reddit.com/r/statistics</a></p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
