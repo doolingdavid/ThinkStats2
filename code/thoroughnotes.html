@@ -27458,6 +27458,709 @@ RETShsKtiIiIiKQNhVsRERERSRsKtyIiIiKSNhRuRURERCRtKNyKiIiISNpQuBURERGRtPH/NAdG
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Chapter-9:-Hypothesis-testing"><font color="steelblue">Chapter 9: Hypothesis testing</font><a class="anchor-link" href="#Chapter-9:-Hypothesis-testing">&#182;</a></h2><p>The code for this chapter is in <code>hypothesis.py</code>.</p>
+<h3 id="9.1-Classical-hypothesis-testing"><font color="steelblue">9.1 Classical hypothesis testing</font><a class="anchor-link" href="#9.1-Classical-hypothesis-testing">&#182;</a></h3><p>Exploring the data from the NSFG, we saw several "apparent effects," including differences between first babies and others. So far we have taken these effects at face value; in this chapter, we put them to the test.</p>
+<p>The fundamental question we want to address is whether the effects we see in a sample are likely to appear in the larger population. For example, in the NSFG sample we see a difference in mean pregnancy length for first babies and others. We would like to know if that effect reflects a real difference for women in the U.S., or if it might appear in the sample by chance.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>There are several ways we could formulate this question, including Fisher null hypothesis testing, Neyman-Pearson decision theory, and Bayesian inference. What I present here is a subset of all three that makes up most of what people use in practice, which I will call <strong>classical hypothesis testing</strong>.</p>
+<p>The goal of calssical hypothesis testing is to amswer the question, "Given a sample and an apparent effect, what is the probability of seeing such an effect by chance?"</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here's how we answer that question:</p>
+<ul>
+<li>The first step is to qunatify the size of the apparent effect by choosing a <strong>test statistic</strong>. In the NSFG example, the apparent effect is a difference in pregnancy length between first babies and others, so a natural choice for the test statistic is the difference in means between the two groups.</li>
+<li>The second step is to define a <strong>null hypothesis</strong>, which is a model of the system based on the assumption that the apparent effect is not real. In the NSFG example the null hypothesis is that there is no difference between first babies and others; that is, that pregnancy lengths for both groups have the same distribution.</li>
+<li>The third step is to compute <strong>p-value</strong>, which is the probability of seeing the apparent effect if the null hypothesis is true. In the NSFG example, we would compute the acutal difference in means, then compute the probabilty of seeing a difference as big, or bigger, under the null hypothesis.</li>
+<li>the last step is to interpret the result. If the p-value is low, the effect is said to be <strong>statistically significant</strong>, which means that it is unlikely to have occurred by chance. In that case we infer that the effect is more likely to appear in the larger population.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The logic of this process is similar to a proof by contradiction. To prove a mathematical statement, A, you assume temporarily that A is false. If that assumption leads to a controdiction, you conclude that A must actually be true.</p>
+<p>Similarly, to test a hypothesis like, "The effect is real," we assume, temporarily, that it is not. That's the null hypothesis. Based on that assumption, we compute the probability of the apparent effect. That's the p-value. If the p-value is low, we conclude that the null hypothesis is unlikely to be true.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="HypothesisTest"><font color="steelblue">HypothesisTest</font><a class="anchor-link" href="#HypothesisTest">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[289]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">hypothesis</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A coin is tossed 250 times and we see 140 heads (successes) and 110 tails (fails).</p>
+<p>Is this enough evidence that the coin is not a <strong>fair</strong> coin?</p>
+<p>binomial distribution with p = .5 is the null hypothesis.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[291]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">binom</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span>
+<span class="n">rv</span> <span class="o">=</span> <span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">140</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rv</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="mi">140</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0.975146606105
+0.0248533938951
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Testing-a-difference-in-means"><font color="steelblue">Testing a difference in means</font><a class="anchor-link" href="#Testing-a-difference-in-means">&#182;</a></h2><p>One of the most common effects is to test a difference in mean between two groups. In the NSFG data, we saw that the mean pregnancy length for first babies is slightly longer, and the mean birth weight is slightly smaller. Now we will see if those effects are statistically significant.</p>
+<p>For these examples, the null hypothesis is that the distributions for the two groups are the same. One way to model the null hyopthesis is by <strong>permutation</strong>; that is we can take values for first babies and others and shuffle them, threating the two groups as one big group.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[292]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">live</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[292]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>count    9148.000000
+mean       38.560560
+std         2.702344
+min         0.000000
+25%        39.000000
+50%        39.000000
+75%        39.000000
+max        50.000000
+Name: prglngth, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[293]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[293]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>count    4413.000000
+mean       38.600952
+std         2.791901
+min         0.000000
+25%        39.000000
+50%        39.000000
+75%        40.000000
+max        48.000000
+Name: prglngth, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[294]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[294]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>count    4735.000000
+mean       38.522914
+std         2.615852
+min         4.000000
+25%        39.000000
+50%        39.000000
+75%        39.000000
+max        50.000000
+Name: prglngth, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[295]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_stat</span> <span class="o">=</span> <span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test_stat</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0.07803726677754952
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[297]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">(),</span>
+               <span class="n">b</span> <span class="o">=</span> <span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">(),</span>
+               <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[297]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Ttest_indResult(statistic=1.3770586451040576, pvalue=0.16852843620437305)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can use this test, if we observe two independent samples from the same or different population, e.g. exam scores of boys and girls or of two ethnic groups. The test measures whether the average (expected) value differs significantly across samples. If we observe a large p-value, for example larger than 0.05 or 0.1, then we cannot reject the null hypothesis of identical average scores. If the p-value is smaller than the threshold, e.g. 1%, 5% or 10%, then we reject the null hypothesis of equal averages.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[307]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">firsts</span><span class="o">.</span><span class="n">totalwgt_lb</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">others</span><span class="o">.</span><span class="n">totalwgt_lb</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">firsts</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">others</span><span class="o">.</span><span class="n">prglngth</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(4363,) (4675,)
+(4413,) (4735,)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[308]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="n">others</span><span class="o">.</span><span class="n">totalwgt_lb</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">(),</span>
+               <span class="n">b</span> <span class="o">=</span> <span class="n">firsts</span><span class="o">.</span><span class="n">totalwgt_lb</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">(),</span>
+               <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[308]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Ttest_indResult(statistic=4.209733147619561, pvalue=2.5816790686657426e-05)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This book focuses on computational methods like resampling and permutation. These methods have several advantages over analysis:</p>
+<ul>
+<li>They are easier to explain and understand. For example, one of the most difficult topics in an introductory statistics class is hypothesis testing. Many students don't really understand what p-values are. I think the approach presented in chapter 9 - simulating the null hypothesis and computing the test statistics - makes the fundamental idea clearer.</li>
+<li>They are robust and versatile. Analytic methods are often based on assumptions that might not hold in practice. Computational methods require fewer assumptions, and can be adpated and extended more easily.</li>
+<li>They are debuggable. Analytic methods are often like a black box: you plug in numbers and the spit out results. But it's easy to make subtle errors, hard to be confident that the results are right, and hard to find the problem if they are not. Computational methods lend themselves to incremental development and testing, which fosters confidence in the results.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Let's-revisit-the-coin-again,-using-computational-methods-instead-of-the-binomial-distribution"><font color="steelblue">Let's revisit the coin again, using computational methods instead of the binomial distribution</font><a class="anchor-link" href="#Let's-revisit-the-coin-again,-using-computational-methods-instead-of-the-binomial-distribution">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[310]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">binom</span>
+<span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span>
+<span class="n">rv</span> <span class="o">=</span> <span class="n">binom</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">140</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rv</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="mi">140</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span> <span class="o">-</span> <span class="n">rv</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">140</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0.975146606105
+0.0248533938951
+0.0248533938951
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[317]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">RunModel</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="n">headslist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="n">heads</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="n">headslist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heads</span><span class="p">)</span>
+    <span class="n">headser</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">headslist</span><span class="p">)</span>
+    <span class="n">headscdf</span> <span class="o">=</span> <span class="n">headser</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">headser</span><span class="o">.</span><span class="n">quantile</span><span class="p">())</span>
+    <span class="n">headscdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">drawstyle</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">headscdf</span>
+    
+    
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[318]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">headscdf</span> <span class="o">=</span> <span class="n">RunModel</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>125.0
+</pre>
+</div>
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+rN7NnYn69vLLL+eqq67Kueeem6amptx999255ZZbctNNN6W5uVnf5tBEfXvTm96Uv/iLv8jpp5+e
+JHnsscdy22235e///u/T1tamb3Nsot696n/+53/y5JNP5owzzhh3Xe/mzmR9W758+Ql/viX11zfL
+EmZZd3d3LrzwwrzhDW847t6uXbtywQUX5LzzzsuiRYty2WWXpbm5Od/73veSJP/1X/+VlpaWXHbZ
+ZVm0aFG6u7tz/vnn5zvf+c5sfxrz0kS9O+uss3LRRReNm2U/lt7NnYn6dskll+S8885LS0tLFi1a
+lPe85z154YUXcvDgwST6Npcm6tuZZ545Fmyr1WoWLFiQoaGhDAwMJNG3uTZR75JkeHg4X/jCF7J5
+8+YsXLhw3D29mzuT9W0i9dY3M7d1ZP/+/XnHO94x7trZZ5+d/fv3j90/55xzxt1fs2ZNHnnkkVmr
+kZOjd43hxz/+cVpaWrJixYok+lbPBgYG8qlPfSovv/xyqtVqfu/3fm9sOYm+1bevf/3rOe+88044
+o6d39euXv/xlPv7xj2fhwoU599xz8773vW8sCNdb34TbOnL06NG0tbWNu/bqr9hquU/90rv69+yz
+z+auu+7K+9///ixevDiJvtWzZcuW5dZbb83Q0FAee+yxDA8Pj93Tt/r19NNP57vf/W5uuOGGE97X
+u/r0lre8JX/7t3+bzs7OvPDCC9m5c2duueWW3HDDDWlpaam7vlmWUEdeXVd7rHK5PPYPZrL71C+9
+q28HDhzIZz/72Vx++eW5+OKLx67rW/1raWnJxo0b861vfSs/+tGPkuhbvRoeHs5dd92VD33oQ2lp
+aTnhGL2rT294wxvS2dmZJDn99NPz4Q9/OL/61a/y3//930nqr29mbuvI6tWr09fXN+7a3r1789a3
+vnXs/ve///1x9/v6+rJ69epZq5GTo3f1q6+vL7feemuuvPLKXHrppePu6VvjqFarOXToULq7u/Wt
+Tv3qV7/KwYMH84//+I8ZHR1NkgwODuZLX/pSfvjDH2bLli1612Be7WO99c3M7SyrVqupVCpjv0Kr
+VCqpVCpJkosvvjjf+9738pOf/CTDw8O59957MzIykt/93d9Nkpx//vl5+eWXc//992d4eDg/+tGP
+8v3vfz9/8Ad/MGefz3wyUe9e+/bIyEgqlUqq1WoSvZtLE/XtqaeeyrZt23LNNdccF2wTfZtLE/Vt
+9+7d6e/vz+joaI4ePTq2Ldhv/uZvJtG3ufZ6vTvzzDPzmc98Jn/zN3+TG264ITfccEOWLl2aa665
+Jh/84AeT6N1cmuh77oknnsgvf/nLJMmvf/3rfOlLX8ppp502tm663vq24MiRI6Nz8pHnqVf3inut
+m266KR0dHXnkkUfy9a9/Pb/61a/S1dWVTZs2jVuk3dfXly996Ut55plncsYZZ+Sqq64atz8gM2ei
+3iXJJz/5yePuXXvttdm4cWMSvZsrE/XtzjvvzM9//vO0tLSMzUAsWLAg119//dg+xfo2Nybq265d
+u/LII4/kpZdeSktLS1avXp13v/vdWbdu3dg4fZs7k/2cO9YnP/nJXH311eN6o3dzY6K+Pfjgg9mz
+Z8/YUoNXX1D26lKFpL76JtwCAFAYliUAAFAYwi0AAIUh3AIAUBjCLQAAhSHcAgBQGMItAACFIdwC
+AFAYwi0AAIUh3AIAUBj/H3jBnNzoy1RcAAAAAElFTkSuQmCC
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[319]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">1</span><span class="o">-</span><span class="n">headscdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">140</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[319]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.02389999999999981</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
